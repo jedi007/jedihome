@@ -64,7 +64,9 @@ def  login(request):
                 if exist_user_list:
                         exist_user = exist_user_list[0]
                         if exist_user.password == user_obj.password :
-                                result = {"result":0, "user":{ "name":exist_user.name, "telephone":exist_user.telephone, "sex":exist_user.sex, "birthday":exist_user.birthday.strftime("%Y-%m-%d %H:%M:%S") } }
+                                result = {"result":0, "user":{ "name":exist_user.name, "telephone":exist_user.telephone, "sex":exist_user.sex, "birthday":exist_user.birthday.strftime("%Y-%m-%d %H:%M:%S") } ,
+                                "friends" : getFriendsList(exist_user.telephone)
+                                }
                                 return JsonResponse(result)
                         else:
                                 result = {"result":-102}
@@ -75,6 +77,15 @@ def  login(request):
 
         result = {"result":-103}
         return JsonResponse(result)
+
+def getFriendsList(tel):
+        friendlist  =  list( FrinendModel.objects.filter(telephone=tel).values("friendTel","add_date") )
+        friendsInfoArray = []
+        for value in friendlist:
+                friendInfo = UserData.objects.filter(telephone=value["friendTel"])[0]
+                friendsInfoArray.append( {"friendTel":friendInfo.telephone,"name":friendInfo.name, "sex":friendInfo.sex, "birthday":friendInfo.birthday.strftime("%Y-%m-%d %H:%M:%S"), "addDate":value["add_date"].strftime("%Y-%m-%d %H:%M:%S")} )
+
+        return friendsInfoArray
 
 
 def  searchUser(request):
