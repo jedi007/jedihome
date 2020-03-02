@@ -11,6 +11,9 @@ class UserData(models.Model):
         birthday      =  models.DateTimeField(default=datetime.strptime("2000-1-1 00:00:00", '%Y-%m-%d %H:%M:%S'),verbose_name="生日")
         create_date  =  models.DateTimeField(auto_now=True, verbose_name="创建时间")
 
+        loginTime      =  models.DateTimeField(default=datetime.strptime("2000-1-1 00:00:00", '%Y-%m-%d %H:%M:%S'),verbose_name="登陆时间")
+        loginIP            =  models.TextField(default="0.0.0.0",  verbose_name="登陆IP")
+
         def  __str__(self):
                 return  self.name         #现实在后台管理 标题中
 
@@ -19,6 +22,8 @@ class FrinendModel(models.Model):
         telephone      =  models.TextField( verbose_name="电话")
         friendTel         =  models.TextField( verbose_name="好友电话")
         add_date  =  models.DateTimeField(auto_now=True, verbose_name="添加时间")
+
+        loginIP            =  models.TextField(default="0.0.0.0",  verbose_name="登陆IP")
 
         def  __str__(self):
                 return  self.telephone         #现实在后台管理 标题中

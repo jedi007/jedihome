@@ -58,15 +58,23 @@ def  login(request):
                         if key == "password":
                                 valuelist = request.POST.getlist(key)
                                 user_obj.password = valuelist[0]
+                        if key == "loginIP":
+                                valuelist = request.POST.getlist(key)
+                                user_obj.loginIP = valuelist[0]
+                                print("user_obj.loginIP: "+str(user_obj.loginIP))
 
                 exist_user_list = UserData.objects.filter(telephone=user_obj.telephone)
                 
                 if exist_user_list:
                         exist_user = exist_user_list[0]
                         if exist_user.password == user_obj.password :
-                                result = {"result":0, "user":{ "name":exist_user.name, "telephone":exist_user.telephone, "sex":exist_user.sex, "birthday":exist_user.birthday.strftime("%Y-%m-%d %H:%M:%S") } ,
+                                result = {"result":0, "user":{ "name":exist_user.name, "telephone":exist_user.telephone, "sex":exist_user.sex, "birthday":exist_user.birthday.strftime("%Y-%m-%d %H:%M:%S")  } ,
                                 "friends" : getFriendsList(exist_user.telephone)
                                 }
+                                print("user_obj.loginIP: "+str(user_obj.loginIP))
+                                exist_user.loginIP = user_obj.loginIP
+                                exist_user.save()
+                                print(exist_user.loginIP)
                                 return JsonResponse(result)
                         else:
                                 result = {"result":-102}
@@ -83,7 +91,8 @@ def getFriendsList(tel):
         friendsInfoArray = []
         for value in friendlist:
                 friendInfo = UserData.objects.filter(telephone=value["friendTel"])[0]
-                friendsInfoArray.append( {"friendTel":friendInfo.telephone,"name":friendInfo.name, "sex":friendInfo.sex, "birthday":friendInfo.birthday.strftime("%Y-%m-%d %H:%M:%S"), "addDate":value["add_date"].strftime("%Y-%m-%d %H:%M:%S")} )
+                friendsInfoArray.append( {"friendTel":friendInfo.telephone,"name":friendInfo.name, "sex":friendInfo.sex, "birthday":friendInfo.birthday.strftime("%Y-%m-%d %H:%M:%S"), "addDate":value["add_date"].strftime("%Y-%m-%d %H:%M:%S"),
+                                                                      "loginIP":friendInfo.loginIP,  "loginTime":friendInfo.loginTime.strftime("%Y-%m-%d %H:%M:%S") } )
 
         return friendsInfoArray
 
@@ -101,7 +110,10 @@ def  searchUser(request):
                 
                 if exist_user_list:
                         exist_user = exist_user_list[0]
-                        result = {"result":0, "user":{ "name":exist_user.name, "telephone":exist_user.telephone, "sex":exist_user.sex, "birthday":exist_user.birthday.strftime("%Y-%m-%d %H:%M:%S") } }
+                        result = {"result":0, "user":{ "name":exist_user.name, "telephone":exist_user.telephone, "sex":exist_user.sex, "birthday":exist_user.birthday.strftime("%Y-%m-%d %H:%M:%S"),
+                                                                                "loginIP":friendInfo.loginIP,  "loginTime":friendInfo.loginTime.strftime("%Y-%m-%d %H:%M:%S")  
+                                                                                }
+                                        }
                         return JsonResponse(result)
                 else:
                         result = {"result":-101}
