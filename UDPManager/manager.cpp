@@ -29,18 +29,24 @@ void Manager::onReceiveData()
     qDebug()<<"receive str : "<<QString(receivedata)<<endl;
 
     QByteArray sep = QString("####DATA####").toLocal8Bit();
-    int index = receivedata.indexOf( sep );
-    if(index < 0) return;
-    QList<QByteArray> qbyteList;
-    qbyteList.append(receivedata.mid(0,index) );
-    qbyteList.append( receivedata.right( receivedata.size()-qbyteList.at(0).size()-sep.size()) );
-    qDebug()<<"qbyteList.at(0): "<<qbyteList.at(0)<<endl;
-    qDebug()<<"qbyteList.at(1): "<<qbyteList.at(1)<<endl;
-
+    JsonData rData;
     JsonManager jsonm;
-    JsonData rData = jsonm.readJson(qbyteList.at(0));
-    if(qbyteList.size() == 2)
+    int index = receivedata.indexOf( sep );
+    if(index < 0)
+    {
+        rData = jsonm.readJson(receivedata);
+    }else if (index >= 0)
+    {
+        QList<QByteArray> qbyteList;
+        qbyteList.append(receivedata.mid(0,index) );
+        qbyteList.append( receivedata.right( receivedata.size()-qbyteList.at(0).size()-sep.size()) );
+        qDebug()<<"qbyteList.at(0): "<<qbyteList.at(0)<<endl;
+        qDebug()<<"qbyteList.at(1): "<<qbyteList.at(1)<<endl;
+        rData = jsonm.readJson(qbyteList.at(0));
         rData.data = qbyteList[1];
+    }
+
+
     qDebug()<<"rData.data: "<<rData.data<<endl;
 
     qDebug()<<"rData.telphone: "<<rData.telphone<<endl;
