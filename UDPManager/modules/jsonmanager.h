@@ -12,7 +12,7 @@
 class JsonData
 {
 public:
-    enum Action{Active};
+    enum Action{Active,SendDataWithConfirm,SendDataWithoutConfirm};
     
     JsonData();
     

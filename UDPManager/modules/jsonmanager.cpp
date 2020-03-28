@@ -79,35 +79,56 @@ JsonData JsonManager::readJson(const QByteArray& byteArray)
                     jData.telphone = value.toString();
                 }
             }
-            if (object.contains("Company")) {
-                QJsonValue value = object.value("Company");
+            if (object.contains("ID")) {
+                QJsonValue value = object.value("ID");
                 if (value.isString()) {
-                    QString strCompany = value.toString();
-                    qDebug() << "Company : " << strCompany;
+                    jData.ID = value.toString();
                 }
             }
-            if (object.contains("From")) {
-                QJsonValue value = object.value("From");
+            if (object.contains("action")) {
+                QJsonValue value = object.value("action");
                 if (value.isDouble()) {
-                    int nFrom = value.toVariant().toInt();
-                    qDebug() << "From : " << nFrom;
-                }
-            }
-            if (object.contains("Version")) {
-                QJsonValue value = object.value("Version");
-                if (value.isArray()) {  // Version 的 value 是数组
-                    QJsonArray array = value.toArray();
-                    int nSize = array.size();
-                    for (int i = 0; i < nSize; ++i) {
-                        QJsonValue value = array.at(i);
-                        if (value.isDouble()) {
-                            double dVersion = value.toDouble();
-                            qDebug() << "Version : " << dVersion;
-                        }
+                    int action = value.toInt();
+                    qDebug()<<"receive action is "<<action<<endl;
+                    switch (action) {
+                        case 0:
+                            jData.m_action = JsonData::Active;
+                            break;
+                        case 1:
+                            jData.m_action = JsonData::SendDataWithConfirm;
+                            break;
+                        case 2:
+                            jData.m_action = JsonData::SendDataWithoutConfirm;
+                            break;
+                        default:
+                            jData.m_action = JsonData::Active;
                     }
                 }
             }
-            
+            if (object.contains("targetID")) {
+                QJsonValue value = object.value("targetID");
+                if (value.isString()) {
+                    jData.targetID = value.toString();
+                }
+            }
+            if (object.contains("targetIP")) {
+                QJsonValue value = object.value("targetIP");
+                if (value.isString()) {
+                    jData.targetIP = value.toString();
+                }
+            }
+            if (object.contains("targetPort")) {
+                QJsonValue value = object.value("ID");
+                if (value.isDouble()) {
+                    jData.targetPort = value.toInt();
+                }
+            }
+            if (object.contains("targetTelephone")) {
+                QJsonValue value = object.value("targetTelephone");
+                if (value.isString()) {
+                    jData.targetTelephone = value.toString();
+                }
+            }
         }
     }
     else{
