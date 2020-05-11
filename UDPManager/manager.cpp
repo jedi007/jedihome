@@ -42,6 +42,7 @@ void Manager::onReceiveData()
         qbyteList.append( receivedata.right( receivedata.size()-qbyteList.at(0).size()-sep.size()) );
         qDebug()<<"qbyteList.at(0): "<<qbyteList.at(0)<<endl;
         qDebug()<<"qbyteList.at(1): "<<qbyteList.at(1)<<endl;
+        qDebug()<<"qbyteList.at(1).toHex(): "<<qbyteList.at(1).toHex()<<endl;
         rData = jsonm.readJson(qbyteList.at(0));
         rData.data = qbyteList[1];
     }

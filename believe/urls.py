@@ -8,4 +8,5 @@ urlpatterns  =  [
         path('login', believe.views.login),
         path('searchUser', believe.views.searchUser),
         path('addFriend', believe.views.addFriend),
+        path('uploadFile', believe.views.uploadFile),
 ]

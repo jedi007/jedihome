@@ -9,6 +9,8 @@ from datetime import datetime
 from  believe.models  import  UserData
 from  believe.models  import  FrinendModel
 
+import os
+
 # Create your views here.
 
 def hello_world(request):
@@ -144,3 +146,19 @@ def addFriend(request):
 
         result = {"result":-103}
         return JsonResponse(result)
+
+def uploadFile(request):
+        if request.method=='GET':
+                return HttpResponse('need post,not get')
+        elif request.method=='POST':
+                name = request.POST.get('username')
+                psd = request.POST.get('password')
+                file_obj = request.FILES.get('file')
+                file_name = file_obj.name
+                print('>>>>',file_name)
+        # 拼接绝对路径
+        file_path = os.path.join("/var/www/html/test/upload", file_name)
+        with open(file_path, 'wb')as f:
+                for chunk in file_obj.chunks():#chunks()每次读取数据默认64k
+                        f.write(chunk)
+        return HttpResponse('ajax上传文件')
