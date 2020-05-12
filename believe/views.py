@@ -155,10 +155,37 @@ def uploadFile(request):
                 psd = request.POST.get('password')
                 file_obj = request.FILES.get('file')
                 file_name = file_obj.name
-                print('>>>>',file_name)
+                print("222>>>>"+file_name)
         # 拼接绝对路径
-        file_path = os.path.join("/var/www/html/test/upload", file_name)
+        file_path = os.path.join("/home/ubuntu/jedihome/believe/fileCache", file_name)
         with open(file_path, 'wb')as f:
                 for chunk in file_obj.chunks():#chunks()每次读取数据默认64k
                         f.write(chunk)
         return HttpResponse('ajax上传文件')
+
+
+from django.http import StreamingHttpResponse
+def file_iterator(file_name, chunk_size=512):
+        with open(file_name,'rb') as f:
+                while True:
+                        c = f.read(chunk_size)
+                        if c:
+                                yield c
+                        else:
+                                break
+
+def big_file_download(request):
+        print("download file called")
+        if request.method=='POST':
+                filename = request.POST.get('filename')
+        else:
+                return HttpResponse('need post,not get')
+  
+        print("download file name: "+str(filename))
+        path  =  "/home/ubuntu/jedihome/believe/fileCache/"
+        the_file_name = path+filename
+        response = StreamingHttpResponse(file_iterator(the_file_name))
+        response['Content-Type'] = 'application/octet-stream'
+        response['Content-Disposition'] = 'attachment;filename="{0}"'.format(filename)
+        
+        return response
