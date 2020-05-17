@@ -184,6 +184,9 @@ def big_file_download(request):
         print("download file name: "+str(filename))
         path  =  "/home/ubuntu/jedihome/believe/fileCache/"
         the_file_name = path+filename
+        if not os.path.exists(the_file_name):
+                return HttpResponse('file is not exists')
+
         response = StreamingHttpResponse(file_iterator(the_file_name))
         response['Content-Type'] = 'application/octet-stream'
         response['Content-Disposition'] = 'attachment;filename="{0}"'.format(filename)
